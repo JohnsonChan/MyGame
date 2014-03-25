@@ -1,4 +1,4 @@
-package com.czs.mygame;
+package com.czs.mygame.activity;
 
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
@@ -8,8 +8,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Window;
-import android.view.WindowManager;
-
+import com.czs.mygame.GameLayer;
 import com.czs.mygame.data.Constants;
 
 public class MainActivity extends Activity {
@@ -19,8 +18,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		// getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-		// WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		// 获得屏幕大小
 		DisplayMetrics dm = new DisplayMetrics();
@@ -35,7 +32,7 @@ public class MainActivity extends Activity {
 
 		CCDirector ccDirector = CCDirector.sharedDirector();
 		ccDirector.attachInView(ccGLSurfaceView);
-		ccDirector.setDisplayFPS(true);
+		ccDirector.setDisplayFPS(false);  // 左下角的帧
 		ccDirector.setAnimationInterval(1 / 30.0);
 
 		CCScene ccScene = CCScene.node(); 
