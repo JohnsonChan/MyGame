@@ -34,9 +34,10 @@ public class GameLayer extends CCLayer {
     private float weight = 0.0f;
     private float scaleX = 0.0f;
     private float scaleY = 0.0f;
-    private float barHeight = 0.0f;
-    private float barChangeHeight = 0.0f;
+    private float barHeight = 0.0f;    // 中心点，往上高多少，往下低多少
     private float barWeight = 0.0f;   // 障碍的宽
+    
+    private float speep = 7.0f;
 
 
 //    private CCAnimation ccAnimation = CCAnimation.animation("", 0.2f);
@@ -47,7 +48,6 @@ public class GameLayer extends CCLayer {
         height = cgSize.height;
         weight = cgSize.width;
         barHeight = height /10;
-        barChangeHeight = height / 50;
         LogUtil.d("height:" + height);
         LogUtil.d("weight:" + weight);
 
@@ -62,19 +62,7 @@ public class GameLayer extends CCLayer {
         background.setScaleY(scaleY);
         
         // 地板
-        floorOne = CCSprite.sprite("ground.png");
-        this.addChild(floorOne);
-        floorTwo = CCSprite.sprite("ground.png");
-        this.addChild(floorTwo);
-        floorOne.setAnchorPoint(0, 0);
-        floorOne.setPosition(0, 0);
-        floorTwo.setAnchorPoint(0, 0);
-        floorTwo.setPosition(weight, 0);
-        floorOne.setScaleY(scaleY);
-        floorOne.setScaleX(scaleX);
-        floorTwo.setScaleY(scaleY);
-        floorTwo.setScaleX(scaleX);
-        
+      
         
         upBarOne = CCSprite.sprite("up_bar.png");
         upBarOne.setScaleX(scaleX);
@@ -97,39 +85,52 @@ public class GameLayer extends CCLayer {
         upBarTwo.setScaleY(scaleY);
         this.addChild(upBarTwo);
         upBarTwo.setAnchorPoint(0,0);  
-        upBarTwo.setPosition(1150, 1280-400);
+        upBarTwo.setPosition(weight*3/2+barWeight/2, height/2+barHeight);
         
         downBarTwo = CCSprite.sprite("down_bar.png");
         downBarTwo.setScaleX(scaleX);
         downBarTwo.setScaleY(scaleY);
         this.addChild(downBarTwo);
         downBarTwo.setAnchorPoint(0,0);
-        downBarTwo.setPosition(1150, 0);
+        downBarTwo.setPosition(weight*3/2+barWeight/2, 0-barHeight);
         
       
+        floorOne = CCSprite.sprite("ground.png");
+        this.addChild(floorOne);
+        floorTwo = CCSprite.sprite("ground.png");
+        this.addChild(floorTwo);
+        floorOne.setAnchorPoint(0, 0);
+        floorOne.setPosition(0, 0);
+        floorTwo.setAnchorPoint(0, 0);
+        floorTwo.setPosition(weight, 0);
+        floorOne.setScaleY(scaleY);
+        floorOne.setScaleX(scaleX);
+        floorTwo.setScaleY(scaleY);
+        floorTwo.setScaleX(scaleX);
+        
         
 //
 //
        
 //        
 //      
-//        bird = CCSprite.sprite("loading_01.png");
-//        CCAnimation animation = CCAnimation.animation("dance", 0.05f);
-//        for (int i = 1; i < 12; i++) {
-//            animation.addFrame(new CCFormatter().format("loading_%02d.png", i));
-//            LogUtil.d(new CCFormatter().format("loading_%02d.png", i));
-//        }
-//
-//        CCIntervalAction action = CCAnimate.action(animation);
-//
-//        this.addChild(bird);
-//
-//        CGSize s = CCDirector.sharedDirector().winSize();
-//
-//        bird.setPosition(CGPoint.make(s.width / 3, s.height / 2));
-//        CCRepeatForever ccRepeatForever = CCRepeatForever.action(action);
-//        bird.runAction(ccRepeatForever);
-//        this.setIsTouchEnabled(true);
+        bird = CCSprite.sprite("loading_01.png");
+        CCAnimation animation = CCAnimation.animation("dance", 0.05f);
+        for (int i = 1; i < 12; i++) {
+            animation.addFrame(new CCFormatter().format("loading_%02d.png", i));
+            LogUtil.d(new CCFormatter().format("loading_%02d.png", i));
+        }
+
+        CCIntervalAction action = CCAnimate.action(animation);
+
+        this.addChild(bird);
+
+        CGSize s = CCDirector.sharedDirector().winSize();
+
+        bird.setPosition(CGPoint.make(s.width / 3, s.height / 2));
+        CCRepeatForever ccRepeatForever = CCRepeatForever.action(action);
+        bird.runAction(ccRepeatForever);
+        this.setIsTouchEnabled(true);
 //
 //
 //      
@@ -139,35 +140,35 @@ public class GameLayer extends CCLayer {
     
     // 刷新障碍
     public void refreshBar(float dt) {
-    	upBarOne.setPosition(upBarOne.getPosition().x - 2, upBarOne.getPosition().y);
-    	downBarOne.setPosition(downBarOne.getPosition().x - 2, downBarOne.getPosition().y);
+    	upBarOne.setPosition(upBarOne.getPosition().x - speep, upBarOne.getPosition().y);
+    	downBarOne.setPosition(downBarOne.getPosition().x - speep, downBarOne.getPosition().y);
         if (upBarOne.getPosition().x < -barWeight) {
         	Random random = new Random();
-        	int i = random.nextInt(10);
-        	upBarOne.setPosition(weight, height/2 + barHeight + i);
+        	int i = random.nextInt((int)barHeight);
+        	upBarOne.setPosition(weight, height/2 + barHeight - i);
         	LogUtil.d("czs:"+ (height/2 + barHeight + i));
         	downBarOne.setPosition(weight, 0 - barHeight - i);
         }
     	
         
-//        upBarTwo.setPosition(upBarTwo.getPosition().x - 2, upBarTwo.getPosition().y);
-//        downBarTwo.setPosition(downBarTwo.getPosition().x - 2, downBarTwo.getPosition().y);
-//        if (upBarTwo.getPosition().x == -156) {
-//        	Random random = new Random();
-//        	int i = random.nextInt(50)-25;
-//        	upBarTwo.setPosition(720, 1280-400 -i);
-//        	downBarTwo.setPosition(720, 0-i);
-//        }
+        upBarTwo.setPosition(upBarTwo.getPosition().x - speep, upBarTwo.getPosition().y);
+        downBarTwo.setPosition(downBarTwo.getPosition().x - speep, downBarTwo.getPosition().y);
+        if (upBarTwo.getPosition().x < -barWeight) {
+        	Random random = new Random();
+        	int i = random.nextInt((int)barHeight);
+        	upBarTwo.setPosition(weight, height/2 + barHeight + i);
+        	downBarTwo.setPosition(weight, 0 - barHeight + i);
+        }
     }
 
     // 刷新地板
     public void refreshFloor(float dt) {
-        floorOne.setPosition(floorOne.getPosition().x - 2, floorOne.getPosition().y);
-        if (floorOne.getPosition().x == -weight) {
+        floorOne.setPosition(floorOne.getPosition().x - speep, floorOne.getPosition().y);
+        if (floorOne.getPosition().x < -weight) {
             floorOne.setPosition(0.0f, floorOne.getPosition().y);
         }
-        floorTwo.setPosition(floorTwo.getPosition().x - 2, floorTwo.getPosition().y);
-        if (floorTwo.getPosition().x == 0) {
+        floorTwo.setPosition(floorTwo.getPosition().x - speep, floorTwo.getPosition().y);
+        if (floorTwo.getPosition().x < 0) {
             floorTwo.setPosition(weight, floorOne.getPosition().y);
         }
     }
